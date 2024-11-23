@@ -1,6 +1,7 @@
-﻿@model List<FSPBook.Core.Models.PostModel>
+﻿@using FSPBook.Core.Models
+@model ProfileModel
 @{
-    ViewData["Title"] = "Posts";
+    ViewData["Title"] = "Profile";
     Layout = "~/Pages/Shared/_Layout.cshtml";
 }
 <style>
@@ -8,6 +9,9 @@
         margin: 20px;
     }
 
+    .profile {
+        margin: 20px;
+    }
     .post {
         border: 1px solid #ddd;
         padding: 10px;
@@ -30,33 +34,35 @@
     }
 </style>
 
-<div class="container">
-    <h1>Recent Posts</h1>
+<div class="profile">
+    <h2>@Model.Name</h2>
+    <h3>Job Title : @Model.JobTitle</h3>
+
+    <h4>Recent Posts</h4>
     <div id="posts-container">
-        @foreach (var post in Model)
+        @foreach (var post in Model.Posts)
         {
             <div class="post">
-                <h3>
-                    <a href="MVC/Profile/Index/@post.AuthorId">@post.AuthorName</a>
-                </h3>
-                <p class="created-at" data-postid="@post.Id" data-timestamp="@post.DateTimePosted.ToString("o")">@post.DateTimePosted.ToLocalTime().ToString("g")</p>
+                <p class="created-at" data-postid="@post.Id" data-timestamp="@post.DateTimePosted.ToString("o")">
+                    Posted: @post.DateTimePosted.ToLocalTime().ToString("g")
+                </p>
                 <p>@post.Content</p>
             </div>
         }
     </div>
-
-    <button id="load-more" data-page="0">Load More</button>
-    @* <a id="newPost" href="/" style="display:none"> New posts available, click here to refresh the page </a> *@
+    <button id="load-more" data-page="0" data-userid="@Model.Id" data-pagesize="1">
+        Load More
+    </button>
 </div>
 
 <script>
     var latestPostId = null;
     document.getElementById("load-more").addEventListener("click", function () {
         const button = this;
+        const userId = button.getAttribute("data-userid");
         const page = parseInt(button.getAttribute("data-page")) + 1;
-        
         const container = document.getElementById("posts-container");
-         
+
         if (latestPostId == null) {
             const posts = container.querySelectorAll(".post");
             if (posts.length > 0) {
@@ -64,22 +70,14 @@
                 latestPostId = lastPost.querySelector(".created-at").dataset.postid;
             }
         }
+        const pageSize = button.getAttribute("data-pagesize");
 
-        fetch(`/MVC/Home/LoadMorePosts?pageNumber=${page}&latestPostId=${latestPostId}`)
+        fetch(`/MVC/Profile/LoadMorePosts?userId=${userId}&latestPostId=${latestPostId}&pageSize=${pageSize}&pageNumber=${page}`)
             .then(response => response.text())
             .then(html => {
                 container.innerHTML += html;
                 button.setAttribute("data-page", page);
-                // debugger;
-                // var anyNewPost = $("#hdnAnyNewPost").val();
 
-                // if (anyNewPost == "true") {
-                //     document.getElementById("newPost").style.display = "none";
-                // }
-                // else {
-                //     document.getElementById("newPost").style.display = "none";
-                // }
             });
     });
-    
 </script>

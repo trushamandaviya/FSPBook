@@ -6,8 +6,4 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\FSPBook.Data\FSPBook.Data.csproj" />
-  </ItemGroup>
-
 </Project>

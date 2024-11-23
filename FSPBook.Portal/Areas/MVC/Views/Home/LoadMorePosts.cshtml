@@ -1,0 +1,20 @@
+﻿@using FSPBook.Core.Models
+@model List<PostModel>
+@{
+    PostModel postModel = new PostModel();
+    if(Model != null)
+    {
+        postModel = Model.FirstOrDefault();
+    }
+}
+
+@foreach (var post in Model)
+{
+    <div class="post">
+        <h3><a href="MVC/Profile/Index/@post.AuthorId">@post.AuthorName</a></h3>
+        <p class="created-at" data-postid="@post.Id">@post.DateTimePosted.ToString("g")</p>
+        <p>@post.Content</p>
+    </div>
+}
+<input type="hidden" id="hdnAnyNewPost" value="@postModel?.AnyNewPost"/>
+

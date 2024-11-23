@@ -12,4 +12,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\FSPBook.Core\FSPBook.Core.csproj" />
+  </ItemGroup>
+
 </Project>

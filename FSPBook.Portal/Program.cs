@@ -1,4 +1,7 @@
+using FSPBook.Core.Interfaces;
+using FSPBook.Core.Services;
 using FSPBook.Data;
+using FSPBook.Data.Repositories;
 using FSPBook.Utilities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +16,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<Context>(options => options.UseInMemoryDatabase("FSPBookDataBase"));
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+
+builder.Services.AddScoped<IPost, PostRepository>();
+builder.Services.AddScoped<IPostService, PostService>();
+builder.Services.AddScoped<IProfile, ProfileRepository>();
+builder.Services.AddScoped<IProfileService, ProfileService>();
 
 var app = builder.Build();
 

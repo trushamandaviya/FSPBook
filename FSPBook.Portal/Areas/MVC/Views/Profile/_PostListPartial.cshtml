@@ -1,0 +1,12 @@
+﻿@using FSPBook.Core.Models
+@model List<PostModel>
+
+@foreach (var post in Model)
+{
+    <div class="post">
+        <p class="created-at" data-postid="@post.Id" data-timestamp="@post.DateTimePosted.ToString("o")">
+            Posted: @post.DateTimePosted.ToLocalTime().ToString("g")
+        </p>
+        <p>@post.Content</p>
+    </div>
+}
