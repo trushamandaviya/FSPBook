@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\FSPBook.Core\FSPBook.Core.csproj" />
     <ProjectReference Include="..\FSPBook.Data\FSPBook.Data.csproj" />
   </ItemGroup>
 
