@@ -71,13 +71,30 @@
             }
         }
         const pageSize = button.getAttribute("data-pagesize");
-
-        fetch(`/MVC/Profile/LoadMorePosts?userId=${userId}&latestPostId=${latestPostId}&pageSize=${pageSize}&pageNumber=${page}`)
-            .then(response => response.text())
+        fetch(`/MVC/Profile/LoadMorePosts`, {
+                method: "POST", // Set the HTTP method to POST
+                headers: {
+                    "Content-Type": "application/json", // Specify the content type
+                },
+                body: JSON.stringify({
+                    PageNumber: page,       // Pass data in the request body
+                    LatestPostId: latestPostId,
+                    UserId: userId,
+                    PageSize: pageSize
+                }),
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Failed to fetch posts");
+                }
+                return response.text(); // Parse the response as text
+            })
             .then(html => {
-                container.innerHTML += html;
-                button.setAttribute("data-page", page);
-
+                container.innerHTML += html; // Append the returned HTML to the container
+                button.setAttribute("data-page", page); // Update the button's data attribute
+            })
+            .catch(error => {
+                console.error("Error loading posts:", error);
             });
     });
 </script>

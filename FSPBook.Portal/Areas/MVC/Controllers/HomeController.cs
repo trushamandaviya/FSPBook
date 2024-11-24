@@ -1,4 +1,5 @@
 ﻿using FSPBook.Core.Interfaces;
+using FSPBook.Portal.Areas.MVC.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -21,10 +22,11 @@ namespace FSPBook.Portal.Areas.MVC.Controllers
             return View(posts);
         }
 
-        public async Task<IActionResult> LoadMorePosts(int? pageNumber, int? latestPostId)
+        [HttpPost]
+        public async Task<IActionResult> LoadMorePosts ([FromBody] PostsRequestModel postsRequest) 
         {
             int pageSize = 1;
-            var posts = await _postService.GetPostsAsync(pageNumber ?? 0, pageSize, latestPostId ?? 0);
+            var posts = await _postService.GetPostsAsync(postsRequest.PageNumber ?? 0, pageSize, postsRequest.LatestPostId ?? 0);
             return PartialView(posts);
         }
     }

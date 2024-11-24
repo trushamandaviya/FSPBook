@@ -1,8 +1,6 @@
 ﻿using FSPBook.Core.Interfaces;
-using FSPBook.Core.Models;
+using FSPBook.Portal.Areas.MVC.Models;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace FSPBook.Portal.Areas.MVC.Controllers
@@ -26,9 +24,10 @@ namespace FSPBook.Portal.Areas.MVC.Controllers
             return View(profile);
         }
 
-        public async Task<IActionResult> LoadMorePosts(int userId, int latestPostId, int? pageSize, int? pageNumber)
+        [HttpPost]
+        public async Task<IActionResult> LoadMorePosts([FromBody] PostsRequestModel postsRequest)
         {
-            var posts = await _profileService.GetUserPostsAsync(userId, latestPostId, pageNumber ?? 0, pageSize ?? 1);
+            var posts = await _profileService.GetUserPostsAsync(postsRequest.UserId ?? 0, postsRequest.LatestPostId ?? 0, postsRequest.PageNumber ?? 0, postsRequest.PageSize ?? 1);
             return PartialView("_PostListPartial", posts);
         }
     }
