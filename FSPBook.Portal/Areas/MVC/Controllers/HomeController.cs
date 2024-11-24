@@ -9,16 +9,25 @@ namespace FSPBook.Portal.Areas.MVC.Controllers
     public class HomeController : Controller
     {
         private readonly IPostService _postService;
+        private readonly INewsService _newsService;
 
-        public HomeController(IPostService postService)
+        public HomeController(IPostService postService, INewsService newsService)
         {
             _postService = postService;
+            _newsService = newsService;
         }
 
         public async Task<IActionResult> Index(int? pageNumber)
         {
             int pageSize = 1;
             var posts = await _postService.GetPostsAsync(pageNumber ?? 0, pageSize,0);
+
+            // Fetch the latest 5 technology news articles, but max limit for artical is 3 for free account, and also source filter is restricted
+            var news = await _newsService.GetLatestTechnologyNewsAsync(5,"cnet.com,qz.com");
+
+            // Pass the news to the view
+            ViewBag.TechnologyNews = news;
+
             return View(posts);
         }
 

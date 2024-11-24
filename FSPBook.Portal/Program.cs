@@ -21,6 +21,7 @@ builder.Services.AddScoped<IPost, PostRepository>();
 builder.Services.AddScoped<IPostService, PostService>();
 builder.Services.AddScoped<IProfile, ProfileRepository>();
 builder.Services.AddScoped<IProfileService, ProfileService>();
+builder.Services.AddHttpClient<INewsService, NewsService>();
 
 var app = builder.Build();
 

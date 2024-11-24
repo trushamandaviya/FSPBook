@@ -9,16 +9,65 @@
         margin: 20px;
     }
 
+    /* Profile Container */
     .profile {
-        margin: 20px;
+        background-color: #f8f9fa; /* Light gray background */
+        border-radius: 10px; /* Rounded corners */
+        padding: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
     }
+
+        /* User Name */
+        .profile h2 {
+            font-size: 2.5rem; /* Larger text */
+            font-weight: 700; /* Bold */
+            color: #007bff; /* Bootstrap primary color */
+        }
+
+        /* Job Title */
+        .profile h3 {
+            font-size: 1.25rem; /* Medium text */
+            color: #6c757d; /* Bootstrap muted color */
+            margin-bottom: 20px; /* Spacing below job title */
+        }
+
+        /* Recent Posts Header */
+        .profile h4 {
+            font-size: 1.5rem; /* Medium-large text */
+            font-weight: 600; /* Semi-bold */
+            color: #343a40; /* Dark gray */
+            border-bottom: 2px solid #dee2e6; /* Add a bottom border */
+            padding-bottom: 10px; /* Space below the border */
+            margin-top: 30px; /* Space above the header */
+        }
+    
+    /* Align posts to the left */
+    #posts-container {
+        text-align: left; /* Ensure all content is left-aligned */
+    }
+
+    /* Style individual posts */
     .post {
-        border: 1px solid #ddd;
-        padding: 10px;
-        margin-bottom: 10px;
-        border-radius: 5px;
-        background-color: #f9f9f9;
+        border: 1px solid #dee2e6; /* Light border around posts */
+        border-radius: 8px; /* Rounded corners */
+        padding: 15px; /* Add spacing inside posts */
+        background-color: #f8f9fa; /* Light background color */
+        margin-bottom: 15px; /* Space between posts */
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
     }
+
+        /* Style the timestamp */
+        .post .created-at {
+            font-size: 0.9rem; /* Smaller text size */
+            color: #6c757d; /* Muted color */
+            margin-bottom: 5px; /* Space below the timestamp */
+        }
+
+        /* Style the post content */
+        .post .post-content {
+            font-size: 1rem; /* Normal text size */
+            color: #343a40; /* Darker color for readability */
+        }
 
     h1 {
         margin-bottom: 20px;
@@ -34,19 +83,19 @@
     }
 </style>
 
-<div class="profile">
-    <h2>@Model.Name</h2>
-    <h3>Job Title : @Model.JobTitle</h3>
+<div class="profile text-center py-4">
+    <h2 class="display-4 fw-bold text-primary">@Model.Name</h2>
+    <h3 class="fw-normal text-muted">Job Title : @Model.JobTitle</h3>
 
-    <h4>Recent Posts</h4>
+    <h4 class="mt-4 border-bottom pb-2 text-secondary">Recent Posts</h4>
     <div id="posts-container">
         @foreach (var post in Model.Posts)
         {
-            <div class="post">
-                <p class="created-at" data-postid="@post.Id" data-timestamp="@post.DateTimePosted.ToString("o")">
+            <div class="post mb-3">
+                <p class="created-at text-muted" data-postid="@post.Id" data-timestamp="@post.DateTimePosted.ToString("o")">
                     Posted: @post.DateTimePosted.ToLocalTime().ToString("g")
                 </p>
-                <p>@post.Content</p>
+                <p class="post-content">@post.Content</p>
             </div>
         }
     </div>

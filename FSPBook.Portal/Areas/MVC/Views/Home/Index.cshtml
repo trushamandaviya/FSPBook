@@ -8,13 +8,28 @@
         margin: 20px;
     }
 
+    /* Style individual posts */
     .post {
-        border: 1px solid #ddd;
-        padding: 10px;
-        margin-bottom: 10px;
-        border-radius: 5px;
-        background-color: #f9f9f9;
+        border: 1px solid #dee2e6; /* Light border around posts */
+        border-radius: 8px; /* Rounded corners */
+        padding: 15px; /* Add spacing inside posts */
+        background-color: #f8f9fa; /* Light background color */
+        margin-bottom: 15px; /* Space between posts */
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
     }
+
+        /* Style the timestamp */
+        .post .created-at {
+            font-size: 0.9rem; /* Smaller text size */
+            color: #6c757d; /* Muted color */
+            margin-bottom: 5px; /* Space below the timestamp */
+        }
+
+        /* Style the post content */
+        .post .post-content {
+            font-size: 1rem; /* Normal text size */
+            color: #343a40; /* Darker color for readability */
+        }
 
     h1 {
         margin-bottom: 20px;
@@ -28,26 +43,81 @@
         border-radius: 5px;
         cursor: pointer;
     }
+
+    .list-group-item a {
+        text-decoration: none;
+        color: #007bff;
+    }
+
+        .list-group-item a:hover {
+            text-decoration: underline;
+        }
+
+    .list-group-item img {
+        border-radius: 5px;
+    }
+
+    .list-group-item {
+        margin-bottom: 10px;
+        padding: 10px;
+    }
 </style>
 
-<div class="container">
-    <h1>Recent Posts</h1>
-    <div id="posts-container">
-        @foreach (var post in Model)
-        {
-            <div class="post">
-                <h3>
-                    <a href="MVC/Profile/Index/@post.AuthorId">@post.AuthorName</a>
-                </h3>
-                <p class="created-at" data-postid="@post.Id" data-timestamp="@post.DateTimePosted.ToString("o")">@post.DateTimePosted.ToLocalTime().ToString("g")</p>
-                <p>@post.Content</p>
+<div class="container-fluid">
+    <div class="row">
+        <!-- Main Content -->
+        <div class="col-md-9">
+            <h3 class="mb-3 border-bottom pb-2 text-secondary">Recent Posts</h3>
+            <div id="posts-container">
+                @foreach (var post in Model)
+                {
+                    <div class="post mb-3">
+                        <h3>
+                            <a href="MVC/Profile/Index/@post.AuthorId">@post.AuthorName</a>
+                        </h3>
+                        <p class="created-at text-muted" data-postid="@post.Id" data-timestamp="@post.DateTimePosted.ToString("o")">@post.DateTimePosted.ToLocalTime().ToString("g")</p>
+                        <p class="post-content">@post.Content</p>
+                    </div>
+                }
             </div>
-        }
-    </div>
-
-    <button id="load-more" data-page="0">Load More</button>
-    @* <a id="newPost" href="/" style="display:none"> New posts available, click here to refresh the page </a> *@
+            <button id="load-more" data-page="0">Load More</button>
+            @* <a id="newPost" href="/" style="display:none"> New posts available, click here to refresh the page </a> *@
+        </div> 
+        
+        <!-- News Sidebar -->
+        <div class="col-md-3">
+            <h3 class="mb-3 border-bottom pb-2 text-secondary">Technology News Feed</h3>
+            @if (ViewBag.TechnologyNews != null)
+            {
+                <ul class="list-group">
+                    @foreach (var article in ViewBag.TechnologyNews)
+                    {
+                        <li class="list-group-item">
+                            @if (article.ImageUrl != null)
+                            {
+                                <img src="@article.ImageUrl" alt="@article.Title" class="img-thumbnail" style="width:100px; height:auto; float:left; margin-right:10px;" />
+                            }
+                            <a href="@article.Url" target="_blank">@article.Title</a>
+                            <p style="margin-top: 5px; color: gray;">
+                                <small>@article.Source </small>
+                                @if (article.PublishedAt != null)
+                                {
+                                    <small> - @article.PublishedAt?.ToString("MMMM dd, yyyy HH:mm") </small>
+                                }
+                            </p>
+                            <div style="clear:both;"></div>
+                        </li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <p>No news available.</p>
+            }
+        </div>
+    </div>  
 </div>
+
 
 <script>
     var latestPostId = null;
