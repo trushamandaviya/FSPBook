@@ -1,4 +1,5 @@
 ﻿@using FSPBook.Core.Models
+@using FSPBook.Portal.Areas.MVC.Models
 @model ProfileModel
 @{
     ViewData["Title"] = "Profile";
@@ -91,7 +92,7 @@
     <div id="posts-container">
         @Html.Partial("_PostListPartial", Model.Posts)        
     </div>
-    <button id="load-more" data-page="0" data-userid="@Model.Id" data-pagesize="1">
+    <button id="load-more" data-page="0" data-userid="@Model.Id">
         Load More
     </button>
 </div>
@@ -112,7 +113,6 @@
                 latestPostId = lastPost.querySelector(".created-at").dataset.postid;
             }
         }
-        const pageSize = button.getAttribute("data-pagesize");
         fetch(`/MVC/Profile/LoadMorePosts`, {
                 method: "POST", // Set the HTTP method to POST
                 headers: {
@@ -122,7 +122,7 @@
                     PageNumber: page,       // Pass data in the request body
                     LatestPostId: latestPostId,
                     UserId: userId,
-                    PageSize: pageSize
+                PageSize: @Constants.PageSize
                 }),
             })
             .then((response) => {

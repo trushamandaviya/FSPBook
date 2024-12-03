@@ -23,12 +23,11 @@ namespace FSPBook.Portal.Areas.MVC.Controllers
             _logger = logger;
         }
 
-        public async Task<IActionResult> Index(int? pageNumber)
+        public async Task<IActionResult> Index(int? pageNumber, int pageSize = Constants.PageSize)
         {
             try
             {
                 //throw new Exception("Test error");
-                int pageSize = 1;
                 var posts = await _postService.GetPostsAsync(pageNumber ?? 0, pageSize, 0);
 
                 // Fetch the latest 5 technology news articles, but max limit for artical is 3 for free account, and also source filter is restricted
@@ -57,8 +56,11 @@ namespace FSPBook.Portal.Areas.MVC.Controllers
         {
             try
             {
-                int pageSize = 1;
-                var posts = await _postService.GetPostsAsync(postsRequest.PageNumber ?? 0, pageSize, postsRequest.LatestPostId ?? 0);
+                if(postsRequest == null)
+                {
+                    throw new ArgumentNullException(nameof(postsRequest));
+                }
+                var posts = await _postService.GetPostsAsync(postsRequest.PageNumber ?? 0, Convert.ToInt32(postsRequest.PageSize), postsRequest.LatestPostId ?? 0);
                 //throw new Exception("Test error"); 
                 return PartialView("_LoadMorePosts", posts);
             }
@@ -67,7 +69,7 @@ namespace FSPBook.Portal.Areas.MVC.Controllers
                 // Log the exception 
                 _logger.LogError(ex, "An error occurred while processing the request.");
 
-                var data = new
+                var data = new ErrorResponse
                 {
                     Status = false,
                     Message = "Something went wrong while processing the request"

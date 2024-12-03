@@ -5,6 +5,6 @@
         public int? PageNumber { get; set; }
         public int? LatestPostId { get; set; }
         public int? UserId { get; set; }
-        public int? PageSize { get; set; }
+        public int? PageSize { get; set; } = Constants.PageSize;
     }
 }

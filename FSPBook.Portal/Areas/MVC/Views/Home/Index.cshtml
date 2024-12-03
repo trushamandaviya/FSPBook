@@ -1,4 +1,5 @@
-﻿@model List<FSPBook.Core.Models.PostModel>
+﻿@using FSPBook.Portal.Areas.MVC.Models
+@model List<FSPBook.Core.Models.PostModel>
 @{
     ViewData["Title"] = "Posts";
     Layout = "~/Pages/Shared/_Layout.cshtml";
@@ -135,6 +136,7 @@
                 body: JSON.stringify({
                     PageNumber: page,       // Pass data in the request body
                     LatestPostId: latestPostId,
+                    PageSize: @Constants.PageSize
                 }),
             })
                 .then((response) => {

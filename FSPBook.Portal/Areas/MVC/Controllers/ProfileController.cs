@@ -21,7 +21,7 @@ namespace FSPBook.Portal.Areas.MVC.Controllers
             _logger = logger;
         }
 
-        public async Task<IActionResult> Index(int id)
+        public async Task<IActionResult> Index(int id, int pageSize = Constants.PageSize)
         {
             try
             {
@@ -29,7 +29,7 @@ namespace FSPBook.Portal.Areas.MVC.Controllers
                 var profile = await _profileService.GetProfileAsync(id);
                 if (profile == null)
                     throw new Exception("User not found");
-                profile.Posts = await _profileService.GetUserPostsAsync(id, 0, 0, 1);
+                profile.Posts = await _profileService.GetUserPostsAsync(id, 0, 0, pageSize);
                 return View(profile);
             }
             catch(Exception ex)
@@ -60,7 +60,7 @@ namespace FSPBook.Portal.Areas.MVC.Controllers
                 // Log the exception 
                 _logger.LogError(ex, "An error occurred while processing the request.");
 
-                var data = new
+                var data = new ErrorResponse
                 {
                     Status = false,
                     Message = "Something went wrong while processing the request"
