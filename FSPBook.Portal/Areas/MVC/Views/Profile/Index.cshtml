@@ -109,7 +109,7 @@
         if (latestPostId == null) {
             const posts = container.querySelectorAll(".post");
             if (posts.length > 0) {
-                const lastPost = posts[posts.length - 1];
+                const lastPost = posts[0];
                 latestPostId = lastPost.querySelector(".created-at").dataset.postid;
             }
         }

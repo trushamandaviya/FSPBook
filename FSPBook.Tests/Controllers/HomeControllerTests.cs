@@ -47,7 +47,7 @@ namespace FSPBook.Tests.Controllers
         {
 
             // Arrange
-            var latestPostId = 1; // Only posts with Id <= 3 should be returned
+            var latestPostId = 3; // Only posts with Id <= 3 should be returned
             var pageSize = Constants.PageSize;
 
             var mockPosts = new List<PostModel>
