@@ -24,27 +24,34 @@ namespace FSPBook.Core.Services
 
         public async Task<List<NewsArticleModel>> GetLatestTechnologyNewsAsync(int count, string sources)
         {
-            var url = $"{_baseUrl}?api_token={_apiKey}&categories=tech&locale=us&limit={count}&sources={sources}";
-
-            var response = await _httpClient.GetAsync(url);
-            response.EnsureSuccessStatusCode();
-
-            var jsonResponse = await response.Content.ReadAsStringAsync();
-            var newsApiResponse = JsonSerializer.Deserialize<NewsApiResponseModel>(jsonResponse);
             List<NewsArticleModel> articles = new List<NewsArticleModel>();
-
-            if (newsApiResponse != null && newsApiResponse.data != null)
+            try
             {
-                articles = newsApiResponse.data.Select(news => new NewsArticleModel
-                {
-                    Title = news.title,
-                    Url = news.url,
-                    ImageUrl = news.image_url,
-                    Source = news.source,
-                    PublishedAt = news.publishedAt
-                }).ToList();
-            }
+                var url = $"{_baseUrl}?api_token={_apiKey}&categories=tech&locale=us&limit={count}&sources={sources}";
 
+                var response = await _httpClient.GetAsync(url);
+                response.EnsureSuccessStatusCode();
+
+                var jsonResponse = await response.Content.ReadAsStringAsync();
+                var newsApiResponse = JsonSerializer.Deserialize<NewsApiResponseModel>(jsonResponse);
+
+
+                if (newsApiResponse != null && newsApiResponse.data != null)
+                {
+                    articles = newsApiResponse.data.Select(news => new NewsArticleModel
+                    {
+                        Title = news.title,
+                        Url = news.url,
+                        ImageUrl = news.image_url,
+                        Source = news.source,
+                        PublishedAt = news.publishedAt
+                    }).ToList();
+                }
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
             return articles ?? new List<NewsArticleModel>();
         }
     }

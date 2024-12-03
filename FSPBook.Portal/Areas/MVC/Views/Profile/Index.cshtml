@@ -89,15 +89,7 @@
 
     <h4 class="mt-4 border-bottom pb-2 text-secondary">Recent Posts</h4>
     <div id="posts-container">
-        @foreach (var post in Model.Posts)
-        {
-            <div class="post mb-3">
-                <p class="created-at text-muted" data-postid="@post.Id" data-timestamp="@post.DateTimePosted.ToString("o")">
-                    Posted: @post.DateTimePosted.ToLocalTime().ToString("g")
-                </p>
-                <p class="post-content">@post.Content</p>
-            </div>
-        }
+        @Html.Partial("_PostListPartial", Model.Posts)        
     </div>
     <button id="load-more" data-page="0" data-userid="@Model.Id" data-pagesize="1">
         Load More
@@ -111,6 +103,7 @@
         const userId = button.getAttribute("data-userid");
         const page = parseInt(button.getAttribute("data-page")) + 1;
         const container = document.getElementById("posts-container");
+        var isHtml = true;
 
         if (latestPostId == null) {
             const posts = container.querySelectorAll(".post");
@@ -132,18 +125,45 @@
                     PageSize: pageSize
                 }),
             })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error("Failed to fetch posts");
+            .then((response) => {
+                if (response != undefined) {
+                    //Check if response is JSON (handle errors)
+                    const contentType = response.headers.get("Content-Type");
+                    if (contentType && contentType.includes("application/json")) {
+                        console.log(response);
+                        isHtml = false;
+                        return response.json();
+                    }
+                    return response.text();
                 }
-                return response.text(); // Parse the response as text
             })
-            .then(html => {
-                container.innerHTML += html; // Append the returned HTML to the container
-                button.setAttribute("data-page", page); // Update the button's data attribute
+            .then((data) => {
+                if (data != undefined && data != null) 
+                { 
+                    if (isHtml) {
+                        container.innerHTML += data; // Append the returned HTML to the container
+                        button.setAttribute("data-page", page); // Update the button's data attribute
+
+                        // hide load more button if no more posts
+                        var isLastPost = $("#hdnLastPost").val();
+                        if (isLastPost == "true") {
+                            $("#load-more").css("display", "none");
+                        }
+                    }
+                    else{
+                        if (data.status === false) {
+                            // Exit flow to avoid appending HTML
+                            throw new Error(data.message);
+                        }
+                    }
+                }
             })
             .catch(error => {
                 console.error("Error loading posts:", error);
+                $('#CommonModalMessage .modal-title').html("Error");
+                $('#CommonModalMessage .modal-message').html(error.message);
+                $('.modal.show').modal('hide');
+                $('#CommonModalMessage').modal('show');
             });
     });
 </script>

@@ -1,0 +1,23 @@
+﻿@{
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Error";
+    var errorMessage = ViewData["ErrorMessage"] != null ? ViewData["ErrorMessage"] : "Something went wrong while processing your request.";
+}
+
+<div class="container text-center" style="padding-top: 50px;">
+    <h1 class="display-4 text-danger">Oops!</h1>
+    <p class="lead">@errorMessage</p>
+
+    <hr class="my-4">
+
+    <p>
+        If the problem persists, please contact support or try again later.
+    </p>
+
+    <p>
+        <strong>Error Reference ID:</strong>
+        <code>@ViewData["RequestId"]</code>
+    </p>
+
+    <a href="/" class="btn btn-primary btn-lg mt-3">Return to Homepage</a>
+</div>

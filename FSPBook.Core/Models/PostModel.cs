@@ -7,6 +7,5 @@
         public DateTimeOffset DateTimePosted { get; set; }
         public int AuthorId { get; set; }
         public string AuthorName { get; set; }
-        public bool AnyNewPost { get; set; }
     }
 }

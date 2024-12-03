@@ -33,7 +33,6 @@ namespace FSPBook.Data.Repositories
                 .Include(p => p.Author)
                 .ToListAsync();
 
-            //bool anyNewPost = await _context.Post.AnyAsync(p => p.Id > latestPostId);
             // Map EF Core entities to lightweight models
             return posts.Select(p => new PostModel
             {
@@ -41,8 +40,7 @@ namespace FSPBook.Data.Repositories
                 AuthorId = p.AuthorId,
                 Content = p.Content,
                 DateTimePosted = p.DateTimePosted,
-                AuthorName = p.Author?.FullName ?? "Unknown",
-               // AnyNewPost = anyNewPost
+                AuthorName = p.Author?.FullName ?? "Unknown"
             }).ToList();
         }
     }
