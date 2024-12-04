@@ -1,6 +1,6 @@
 ﻿using FSPBook.Core.Models;
 
-namespace FSPBook.Core.Interfaces
+namespace FSPBook.Core.Interfaces.Utilities
 {
     public interface INewsService
     {

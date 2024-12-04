@@ -1,9 +1,9 @@
-﻿using FSPBook.Core.Interfaces;
-using FSPBook.Core.Models;
+﻿using FSPBook.Core.Models;
 using System.Text.Json;
 using Microsoft.Extensions.Configuration;
+using FSPBook.Core.Interfaces.Utilities;
 
-namespace FSPBook.Core.Services
+namespace FSPBook.Core.Services.Utilities
 {
     public class NewsService : INewsService
     {
@@ -48,7 +48,7 @@ namespace FSPBook.Core.Services
                     }).ToList();
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw ex;
             }

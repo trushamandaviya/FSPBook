@@ -1,4 +1,5 @@
 ﻿using FSPBook.Core.Interfaces;
+using FSPBook.Core.Interfaces.Utilities;
 using FSPBook.Pages;
 using FSPBook.Portal.Areas.MVC.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -30,11 +31,19 @@ namespace FSPBook.Portal.Areas.MVC.Controllers
                 //throw new Exception("Test error");
                 var posts = await _postService.GetPostsAsync(pageNumber ?? 0, pageSize, 0);
 
-                // Fetch the latest 5 technology news articles, but max limit for artical is 3 for free account, and also source filter is restricted
-                var news = await _newsService.GetLatestTechnologyNewsAsync(5, "cnet.com,qz.com");
+                try
+                {
+                    // Fetch the latest 5 technology news articles, but max limit for artical is 3 for free account, and also source filter is restricted
+                    var news = await _newsService.GetLatestTechnologyNewsAsync(5, "cnet.com,qz.com");
 
-                // Pass the news to the view
-                ViewBag.TechnologyNews = news;                
+                    // Pass the news to the view
+                    ViewBag.TechnologyNews = news;
+                }
+                catch(Exception ex)
+                {
+                    // Log the exception 
+                    _logger.LogError(ex, "An error occurred while fetching news.");
+                }                              
                 return View(posts);
             }
             catch(Exception ex)

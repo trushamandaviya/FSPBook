@@ -6,6 +6,7 @@ using FSPBook.Pages;
 using Microsoft.Extensions.Logging;
 using FSPBook.Portal.Areas.MVC.Models;
 using Microsoft.AspNetCore.Mvc;
+using FSPBook.Core.Interfaces.Utilities;
 
 namespace FSPBook.Tests.Controllers
 {
