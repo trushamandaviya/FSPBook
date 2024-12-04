@@ -63,10 +63,10 @@ app.UseStaticFiles();
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.MapRazorPages();
+
 app.UseEndpoints(endpoints =>
 {
-    endpoints.MapRazorPages();
-
     endpoints.MapControllerRoute(
                     name: "MVCArea",
                     pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
@@ -75,7 +75,5 @@ app.UseEndpoints(endpoints =>
         name: "default",
         pattern: "{controller=Home}/{action=Index}/{id?}");
 });
-
-app.MapRazorPages();
 
 app.Run();

@@ -99,21 +99,27 @@
 
 <script>
     var latestPostId = null;
-    document.getElementById("load-more").addEventListener("click", function () {
-        const button = this;
-        const userId = button.getAttribute("data-userid");
-        const page = parseInt(button.getAttribute("data-page")) + 1;
-        const container = document.getElementById("posts-container");
-        var isHtml = true;
-
-        if (latestPostId == null) {
-            const posts = container.querySelectorAll(".post");
-            if (posts.length > 0) {
-                const lastPost = posts[0];
-                latestPostId = lastPost.querySelector(".created-at").dataset.postid;
-            }
+    $(document).ready(function () {
+        // hide load more button if no more posts
+        var isLastPost = $("#hdnLastPost").val();
+        if (isLastPost == "true") {
+            $("#load-more").css("display", "none");
         }
-        fetch(`/MVC/Profile/LoadMorePosts`, {
+        $("#load-more").off("click").on("click", function () {
+            const button = this;
+            const userId = button.getAttribute("data-userid");
+            const page = parseInt(button.getAttribute("data-page")) + 1;
+            const container = document.getElementById("posts-container");
+            var isHtml = true;
+
+            if (latestPostId == null) {
+                const posts = container.querySelectorAll(".post");
+                if (posts.length > 0) {
+                    const lastPost = posts[0];
+                    latestPostId = lastPost.querySelector(".created-at").dataset.postid;
+                }
+            }
+            fetch(`/MVC/Profile/LoadMorePosts`, {
                 method: "POST", // Set the HTTP method to POST
                 headers: {
                     "Content-Type": "application/json", // Specify the content type
@@ -122,48 +128,49 @@
                     PageNumber: page,       // Pass data in the request body
                     LatestPostId: latestPostId,
                     UserId: userId,
-                PageSize: @Constants.PageSize
-                }),
+                    PageSize: @Constants.PageSize
+                    }),
             })
-            .then((response) => {
-                if (response != undefined) {
-                    //Check if response is JSON (handle errors)
-                    const contentType = response.headers.get("Content-Type");
-                    if (contentType && contentType.includes("application/json")) {
-                        console.log(response);
-                        isHtml = false;
-                        return response.json();
+                .then((response) => {
+                    if (response != undefined) {
+                        //Check if response is JSON (handle errors)
+                        const contentType = response.headers.get("Content-Type");
+                        if (contentType && contentType.includes("application/json")) {
+                            console.log(response);
+                            isHtml = false;
+                            return response.json();
+                        }
+                        return response.text();
                     }
-                    return response.text();
-                }
-            })
-            .then((data) => {
-                if (data != undefined && data != null) 
-                { 
-                    if (isHtml) {
-                        container.innerHTML += data; // Append the returned HTML to the container
-                        button.setAttribute("data-page", page); // Update the button's data attribute
+                })
+                .then((data) => {
+                    if (data != undefined && data != null) {
+                        if (isHtml) {
+                            container.innerHTML += data; // Append the returned HTML to the container
+                            button.setAttribute("data-page", page); // Update the button's data attribute
 
-                        // hide load more button if no more posts
-                        var isLastPost = $("#hdnLastPost").val();
-                        if (isLastPost == "true") {
-                            $("#load-more").css("display", "none");
+                            // hide load more button if no more posts
+                            var isLastPost = $("#hdnLastPost").val();
+                            if (isLastPost == "true") {
+                                $("#load-more").css("display", "none");
+                            }
+                        }
+                        else {
+                            if (data.status === false) {
+                                // Exit flow 
+                                throw new Error(data.message);
+                            }
                         }
                     }
-                    else{
-                        if (data.status === false) {
-                            // Exit flow to avoid appending HTML
-                            throw new Error(data.message);
-                        }
-                    }
-                }
-            })
-            .catch(error => {
-                console.error("Error loading posts:", error);
-                $('#CommonModalMessage .modal-title').html("Error");
-                $('#CommonModalMessage .modal-message').html(error.message);
-                $('.modal.show').modal('hide');
-                $('#CommonModalMessage').modal('show');
-            });
+                })
+                .catch(error => {
+                    console.error("Error loading posts:", error);
+                    $('#CommonModalMessage .modal-title').html("Error");
+                    $('#CommonModalMessage .modal-message').html(error.message);
+                    $('.modal.show').modal('hide');
+                    $('#CommonModalMessage').modal('show');
+                });
+        });
     });
+    
 </script>
