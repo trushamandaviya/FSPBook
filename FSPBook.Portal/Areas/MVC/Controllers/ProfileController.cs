@@ -14,11 +14,13 @@ namespace FSPBook.Portal.Areas.MVC.Controllers
     {
         private readonly IProfileService _profileService;
         private readonly ILogger<ErrorModel> _logger;
+        private readonly IPostService _postService;
 
-        public ProfileController(IProfileService profileService, ILogger<ErrorModel> logger)
+        public ProfileController(IProfileService profileService, ILogger<ErrorModel> logger, IPostService postService)
         {
             _profileService = profileService;
             _logger = logger;
+            _postService = postService;
         }
 
         public async Task<IActionResult> Index(int id, int pageSize = Constants.PageSize)
@@ -29,7 +31,7 @@ namespace FSPBook.Portal.Areas.MVC.Controllers
                 var profile = await _profileService.GetProfileAsync(id);
                 if (profile == null)
                     throw new Exception("User not found");
-                profile.Posts = await _profileService.GetUserPostsAsync(id, 0, 0, pageSize);
+                profile.Posts = await _postService.GetPostsAsync(0, pageSize, 0, id);
                 return View(profile);
             }
             catch(Exception ex)
@@ -52,7 +54,7 @@ namespace FSPBook.Portal.Areas.MVC.Controllers
             try
             {
                 //throw new Exception("error");
-                var posts = await _profileService.GetUserPostsAsync(postsRequest.UserId ?? 0, postsRequest.LatestPostId ?? 0, postsRequest.PageNumber ?? 0, postsRequest.PageSize ?? 1);
+                var posts = await _postService.GetPostsAsync(postsRequest.PageNumber ?? 0, postsRequest.PageSize ?? Constants.PageSize, postsRequest.LatestPostId ?? 0, postsRequest.UserId ?? 0);
                 return PartialView("_PostListPartial", posts);
             }
             catch (Exception ex)

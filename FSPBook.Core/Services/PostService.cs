@@ -12,9 +12,9 @@ namespace FSPBook.Core.Services
             _postRepository = postRepository;
         }
 
-        public async Task<List<PostModel>> GetPostsAsync(int pageNumber, int pageSize, int latestPostId)
+        public async Task<List<PostModel>> GetPostsAsync(int pageNumber, int pageSize, int latestPostId, int userId = 0)
         {
-            return await _postRepository.GetPostsAsync(pageNumber, pageSize, latestPostId);
+            return await _postRepository.GetPostsAsync(pageNumber, pageSize, latestPostId, userId);
         }
     }
 }

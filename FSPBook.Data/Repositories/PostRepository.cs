@@ -16,9 +16,13 @@ namespace FSPBook.Data.Repositories
             _context = context;
         }
 
-        public async Task<List<PostModel>> GetPostsAsync(int pageNumber, int pageSize, int latestPostId)
+        public async Task<List<PostModel>> GetPostsAsync(int pageNumber, int pageSize, int latestPostId, int userId = 0)
         {
             var query = _context.Post.AsQueryable();
+
+            // Filter posts for the given user
+            if (userId > 0)
+                query = query.Where(p => p.AuthorId == userId);
 
             // Fetch posts older than the latest id
             if (latestPostId > 0)

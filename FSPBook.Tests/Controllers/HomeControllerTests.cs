@@ -61,10 +61,11 @@ namespace FSPBook.Tests.Controllers
 
             // Mock IPostService
             _mockPostService
-                .Setup(s => s.GetPostsAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>()))
-                .ReturnsAsync((int pageNumber, int pageSize, int latestId) =>
+                .Setup(s => s.GetPostsAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>()))
+                .ReturnsAsync((int pageNumber, int pageSize, int latestId, int userId) =>
                 {
-                    return mockPosts.Where(p => p.Id <= latestId).Take(pageSize).ToList();
+                    var effectiveUserId = userId == default ? 0 : userId; // Use default if necessary
+                    return mockPosts.Where(p => p.Id <= latestId && (userId == 0 || p.AuthorId == effectiveUserId)).Take(pageSize).ToList();
                 });
 
             var request = new PostsRequestModel
@@ -84,7 +85,7 @@ namespace FSPBook.Tests.Controllers
             Assert.All(posts, p => Assert.True(p.Id <= latestPostId, $"Post Id {p.Id} is greater than LatestPostId {latestPostId}"));
 
             // Verify the mock was called
-            _mockPostService.Verify(s => s.GetPostsAsync(Convert.ToInt32(request.PageNumber), pageSize, latestPostId));
+            _mockPostService.Verify(s => s.GetPostsAsync(Convert.ToInt32(request.PageNumber), pageSize, latestPostId, 0));
 
 
         }

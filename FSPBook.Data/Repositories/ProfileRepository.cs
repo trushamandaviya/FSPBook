@@ -28,34 +28,6 @@ namespace FSPBook.Data.Repositories
                 JobTitle = user.JobTitle
             };
         }
-
-        public async Task<List<PostModel>> GetUserPostsAsync(int userId, int latestPostId, int pageNumber, int pageSize)
-        {
-            var query = _context.Post.AsQueryable();
-            
-            // Filter posts for the given user
-            query = query.Where(p => p.AuthorId == userId);
-           
-            // Fetch posts older than the latest id
-            if (latestPostId > 0)
-            {
-                query = query.Where(p => p.Id <= latestPostId);
-            }
-
-            var posts = await query
-                .OrderByDescending(p => p.DateTimePosted)
-                .Skip(pageNumber * pageSize)
-                .Take(pageSize)
-                .Include(p => p.Author)
-                .ToListAsync();
-
-            // Map to PostModel
-            return posts.Select(p => new PostModel
-            {
-                Id = p.Id,
-                Content = p.Content,
-                DateTimePosted = p.DateTimePosted
-            }).ToList();
-        }
+        
     }
 }
