@@ -23,7 +23,10 @@ builder.Services.AddScoped<IPost, PostRepository>();
 builder.Services.AddScoped<IPostService, PostService>();
 builder.Services.AddScoped<IProfile, ProfileRepository>();
 builder.Services.AddScoped<IProfileService, ProfileService>();
-builder.Services.AddHttpClient<INewsService, NewsService>();
+builder.Services.AddHttpClient<INewsService, NewsService>(client =>
+{
+    client.BaseAddress = new Uri("https://api.thenewsapi.com/v1/news/top");
+});
 
 var app = builder.Build();
 

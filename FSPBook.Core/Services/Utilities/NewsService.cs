@@ -10,7 +10,7 @@ namespace FSPBook.Core.Services.Utilities
         private readonly HttpClient _httpClient;
         private readonly IConfiguration _configuration;
         private readonly string _apiKey;
-        private readonly string _baseUrl;
+        //private readonly string _baseUrl; 
 
         public NewsService(HttpClient httpClient, IConfiguration configuration)
         {
@@ -19,7 +19,8 @@ namespace FSPBook.Core.Services.Utilities
 
             // Retrieve keys from appsettings.json
             _apiKey = _configuration["NewsApi:ApiKey"];
-            _baseUrl = _configuration["NewsApi:BaseUrl"];
+
+            //_baseUrl = _configuration["NewsApi:BaseUrl"]; // A different way to add base url
         }
 
         public async Task<List<NewsArticleModel>> GetLatestTechnologyNewsAsync(int count, string sources)
@@ -27,7 +28,9 @@ namespace FSPBook.Core.Services.Utilities
             List<NewsArticleModel> articles = new List<NewsArticleModel>();
             try
             {
-                var url = $"{_baseUrl}?api_token={_apiKey}&categories=tech&locale=us&limit={count}&sources={sources}";
+                //var url = $"{_baseUrl}?api_token={_apiKey}&categories=tech&locale=us&limit={count}&sources={sources}";
+
+                var url = $"?api_token={_apiKey}&categories=tech&locale=us&limit={count}&sources={sources}";
 
                 var response = await _httpClient.GetAsync(url);
                 response.EnsureSuccessStatusCode();

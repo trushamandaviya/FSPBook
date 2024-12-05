@@ -19,7 +19,7 @@ namespace FSPBook.Tests.Services
                 .UseInMemoryDatabase(databaseName: "FSPBookDataBase")
                 .Options;
 
-            // Seed test data
+            #region Seed test data
             using (var context = new Context(_options))
             {
                 if (context.Profile.Count() == 0)
@@ -59,8 +59,10 @@ namespace FSPBook.Tests.Services
                 //var profile2 = context.Profile.ToList();
                 //var post2 = context.Post.ToList();
             }
+            #endregion Seed test data
 
-            // Create PostService instance
+            #region Create PostService instance
+
             var testContext = new Context(_options);
 
             // Create an instance of the repository
@@ -68,6 +70,8 @@ namespace FSPBook.Tests.Services
 
             // Pass the repository to the service
             _postService = new PostService(postRepository);
+
+            #endregion Create PostService instance
 
         }
 
@@ -83,7 +87,7 @@ namespace FSPBook.Tests.Services
 
             // Assert
             Assert.NotNull(posts);
-            Assert.Equal(Constants.PageSize, posts.Count); // Check that only 2 posts are returned
+            Assert.Equal(Constants.PageSize, posts.Count); // Check that expected count of posts are returned
         }
 
         [Fact]
